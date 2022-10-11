@@ -60,5 +60,51 @@ print ("ODBC_SQL_CONFORMANCE: ", client.ODBC_SQL_CONFORMANCE)
 print ("APPL_CODEPAGE:        ", client.APPL_CODEPAGE)
 print ("CONN_CODEPAGE:        ", client.CONN_CODEPAGE)
 
+#Lets first drop the table INSTRUCTOR in case it exists from a previous attempt
+dropQuery = "drop table INSTRUCTOR"
+
+#Now execute the drop statment
+dropStmt = ibm_db.exec_immediate(conn, dropQuery)
+
+#Create a new table "instructor"
+createQuery = "CREATE TABLE instructor(id INTEGER PRIMARY KEY NOT NULL, " \
+              "fname VARCHAR(20), " \
+              "lname VARCHAR(20), " \
+              "city VARCHAR(20), " \
+              "code CHAR(2))"
+
+createStmt = ibm_db.exec_immediate(conn,createQuery)
+
+
+insertQuery = "INSERT INTO instructor VALUES (1, 'Rav', 'Ahuja', 'TORONTO', 'CA')"
+insertStmt = ibm_db.exec_immediate(conn, insertQuery)
+
+insertQuery2 = "INSERT INTO instructor VALUES (2, 'Raul', 'Chong', 'Markham', 'CA')," \
+               " (3, 'Hima', 'Vasudevan', 'Chicago', 'US')"
+insertStmt2 = ibm_db.exec_immediate(conn, insertQuery2)
+
+#Construct the query that retrieves all rows from the INSTRUCTOR table
+selectQuery = "SELECT * FROM instructor"
+
+#Execute the statement
+selectStmt = ibm_db.exec_immediate(conn, selectQuery)
+
+#Fetch the Dictionary (for the first row only)
+ibm_db.fetch_both(selectStmt)
+
+#Fetch the rest of the rows and print the ID and FNAME for those rows
+while ibm_db.fetch_row(selectStmt) != False:
+    print (" ID:",  ibm_db.result(selectStmt, 0), " FNAME:",  ibm_db.result(selectStmt, "FNAME"))
+
+#Update the table "indstructor"
+updateQuery = "update INSTRUCTOR set CITY='MOOSETOWN' where FNAME='Rav'"
+updateStmt = ibm_db.exec_immediate(conn, updateQuery)
+
+#In this step we will retrieve the contents of the INSTRUCTOR table into a Pandas dataframe
+
+
+
+
 ibm_db.close(conn)
+
 
