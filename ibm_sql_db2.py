@@ -132,13 +132,12 @@ except Exception as err:
     print("Error on Execute", err)
 
 try:
-    my_tables = my_cursor.fetchall()
+    df = pandas.DataFrame(my_cursor.fetchall())
+    df.columns = [col[0] for col in my_cursor.description]
 except Exception as err:
     print("Error on Fetch", err)
 
-for (tabschema, tablename) in my_tables:
-    print(tabschema, tablename)
-
+print(df)
 
 # pdf = pandas.read_sql(selectQuery, pconn)
 # pdf.lname[0]

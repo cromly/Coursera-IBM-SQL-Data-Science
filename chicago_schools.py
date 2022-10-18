@@ -26,28 +26,20 @@ dsn = (
     "PWD={6};"
     "SECURITY={7};").format(dsn_driver, dsn_database, dsn_hostname, dsn_port, dsn_protocol, dsn_uid, dsn_pwd,dsn_security)
 
-#print the connection string to check correct values are specified
 print(dsn)
-
 conn = ibm_db.connect(dsn, "", "")
 pconn = ibm_db_dbi.Connection(conn)
 my_cursor = pconn.cursor()
+selectQuery = "SELECT * FROM CHIGAGO LIMIT 20"
 
-#Problem 1: Find the total number of crimes recorded in the CRIME table.
-#query1 = "SELECT COUNT(*) FROM CHICAGO_CRIME_DATA"
-#Problem 2: List community areas with per capita income less than 11000.
-#query2 = "SELECT COMMUNITY_AREA_NAME FROM CENSUS_DATA WHERE PER_CAPITA_INCOME < 11000"
-#Problem 3: List all case numbers for crimes involving minors?
-query3 = "SELECT * FROM CHICAGO_CRIME_DATA"
-
-my_cursor.execute(query3)
+my_cursor.execute(selectQuery)
 df = pandas.DataFrame(my_cursor.fetchall())
 df.columns = [col[0] for col in my_cursor.description]
 
+
+
 print(df)
 
-my_cursor.close()
 ibm_db.close(conn)
-
 
 
